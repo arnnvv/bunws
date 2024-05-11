@@ -13,8 +13,13 @@ const server = Bun.serve({
     },
     message(ws, message) {
       console.log(`Incomming message ${ws} ${message}`);
-      if (message.trim().toLowerCase() === "time") {
+      const messageString =
+        typeof message === "string"
+          ? message
+          : new TextDecoder().decode(message);
+      if (messageString.trim().toLowerCase() === "time") {
         const time = new Date().toLocaleTimeString();
+        ws.send(time);
       }
     },
     close(ws) {
