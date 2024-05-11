@@ -9,21 +9,23 @@ const server = Bun.serve({
     open(ws) {
       const welcomeMessage =
         "Welcome ask me the time and I'll tell you what time it is";
-      console.log(`Websocket opened ${ws} ${welcomeMessage}`);
+      ws.send(welcomeMessage);
+      console.log(`Websocket opened`);
     },
     message(ws, message) {
-      console.log(`Incomming message ${ws} ${message}`);
+      console.log(`Incomming message ${message}`);
       const messageString =
         typeof message === "string"
           ? message
           : new TextDecoder().decode(message);
-      if (messageString.trim().toLowerCase() === "time") {
+      if (messageString.trim().toLowerCase() === "time?") {
         const time = new Date().toLocaleTimeString();
         ws.send(time);
+        return;
       }
     },
     close(ws) {
-      console.log(`Websocket closed ${ws}`);
+      console.log(`Websocket closed`);
     },
   },
 });
